@@ -1,27 +1,36 @@
 # -*- coding: utf-8 -*-
+from os import system
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from datetime import date
+from datetime import datetime
 import time
-import csv
 import io
+from getpass import getpass
+import stdiomask
+
 user_email = input("Email: ")
-user_password = input("Password: ")
-print("1. Go to www.messenger.com")
-print("2. Login")
-print("3. Go to the chat you want to record")
-print("4. Copy the link (Ex. https://www.messenger.com/t/xxxxxxxx)")
-user_messenger = input("5. Paste it Here->: ")
-print("\nMessages will be stored inside (messages.txt) file")
-print("\n DO NOT CLOSE THIS CONSOLE AND CHROME WINDOW!")
-today = date.today()
-date = today.strftime("%Y/%m/%d")
-PATH = "C:/Program Files (x86)/chromedriver.exe" #Download ChromeDriver version same as your Chrome Browser version and put the path here
+user_password = stdiomask.getpass()
+print("1. Go to 'facebook.com' or 'messenger.com'")
+print("2. Open the chat you want to record on a new tab")
+print("3. Copy the link (should be a URL ending with '/t/xxxxxxxxx')")
+user_messenger = input("4. Paste it Here->: ")
+chatType = user_messenger.split('/')
+
+system("cls")
+
+print("\nMessages will be stored inside messages.txt")
+print("\n KEEP THIS CONSOLE AND CHROME WINDOW OPEN, MINIMIZED")
+print("\n CLOSING WILL EXIT THE APPLICATION")
+
+PATH = "driver/chromedriver.exe"
 driver = webdriver.Chrome(PATH)
+driver.minimize_window()
+
 driver.get(user_messenger)
 time.sleep(2)
 email = driver.find_element_by_id("email")
 email.send_keys(user_email)
+
 time.sleep(2)
 password = driver.find_element_by_id("pass")
 password.send_keys(user_password)
@@ -29,27 +38,36 @@ time.sleep(2)
 loginButton = driver.find_element_by_id("loginbutton")
 loginButton.send_keys(Keys.RETURN)
 lastMessage = 'i wanna die this is not a joke this is a cry for help'
+waitTime = 5
 while True:
-    time.sleep(2)
-    name = driver.find_element_by_css_selector("div#js_1>:last-child>div>:last-child>:first-child")
+    today = datetime.now()
+    date = today.strftime("%m/%d,%H:%M")
+    time.sleep(waitTime)
+    try:
+        name = driver.find_element_by_css_selector("div[role=row]:last-child>div>div[role=gridcell]>h4>span")
+    except:
+        name = driver.find_element_by_css_selector("div[role=row]:last-child>div>div[role=gridcell]>h4>div>div")
     name = name.text
     try:
         with io.open('messages.txt', 'r', encoding='utf8') as f:
             reader = f.read()
             reader = list(reader.split('\n'))
-            reader = reader[-2].split(';')
-            lastMessage = reader[1]
+            reader = reader[-2].split(' - ')
+            lastMessage = reader[1].strip('"')
     except:
         pass
     try: #This code is just pathetic someone pls kill me
-        messages = driver.find_element_by_css_selector("div#js_1>:last-child>div>:last-child>:last-child>div>:last-child>span")
+        try:
+            messages = driver.find_elements_by_css_selector("div[dir=auto]:last-of-type")[-1]
+        except:
+            messages = driver.find_elements_by_css_selector("div[dir=auto]")[-1]
         messages = messages.text
         if messages != lastMessage:
             with io.open('messages.txt', 'a', encoding='utf8') as f:
-                text = name + ';' + messages + ';' + date + "\n"
+                text = name + ' - "' + messages + '" - ' + date + "\n"
                 writer = f.write(text)
                 print(text)
-
+                waitTime = 2
     except:
         pass
 driver.quit()
