@@ -1,12 +1,21 @@
-Facebook Messenger Recorder
 
-# Required
 
-* Selenium
-* ChromeDriver (Version must be same as ChromeBrowser)
+## Requirements
 
-## To-DO
+**Selenium, Stdiomask**
+```
+pip install selenium stdiomask
+```
+**ChromeDriver**
 
-tbh this is supposed to work for me and only me
-so i won't add more stuff to make it more efficent and user friendly
-i aint wasting more time on this
+Check your chrome version  
+`chrome://settings/help`
+
+and if it's different than Version 92 then download the appropriate version and place it in the `driver` folder
+
+https://sites.google.com/a/chromium.org/chromedriver/downloads
+
+&nbsp;
+
+
+*scuffed with major flaws but it fulfills my needs so yep*
