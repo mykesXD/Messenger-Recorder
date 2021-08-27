@@ -37,11 +37,11 @@ password.send_keys(user_password)
 time.sleep(2)
 loginButton = driver.find_element_by_id("loginbutton")
 loginButton.send_keys(Keys.RETURN)
-lastMessage = 'i wanna die this is not a joke this is a cry for help'
 
 def saveMessage():
-    waitTime = 5
+    waitTime = 6
     while True:
+        lastMessage = "i wanna die"
         today = datetime.now()
         date = today.strftime("%m/%d,%H:%M")
         time.sleep(waitTime)
@@ -73,7 +73,7 @@ def saveMessage():
             if messages != lastMessage:
                 with io.open('messages.txt', 'a', encoding='utf8') as f:
                     text = name + ' - "' + messages + '" - ' + date + "\n"
-                    writer = f.write(text)
+                    f.write(text)
                     print(text)
                     waitTime = 2
         except:
