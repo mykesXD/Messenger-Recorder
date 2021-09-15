@@ -1,0 +1,2 @@
+NAMES | "MESSAGES" | DATE | FILE TYPE
+Asuka | "This is a dummy text" | 00:00AM,Sep 11 | text
